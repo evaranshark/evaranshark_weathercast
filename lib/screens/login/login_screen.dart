@@ -3,7 +3,6 @@ import 'package:evaranshark_weathercast/repositories/style_repo.dart';
 import 'package:evaranshark_weathercast/screens/login/bloc/user_bloc.dart';
 import 'package:evaranshark_weathercast/screens/login/widgets/login_form.dart';
 import 'package:evaranshark_weathercast/services/constants.dart';
-import 'package:evaranshark_weathercast/services/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -87,7 +86,7 @@ class _LoginForm extends StatelessWidget {
                   const SnackBar(content: Text("login actions")),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               EvaBubble(
@@ -101,7 +100,7 @@ class _LoginForm extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Сменить тему"),
+                          const Text("Сменить тему"),
                           Switch.adaptive(
                             value: value.useGPNTheme,
                             onChanged: (switchValue) =>
@@ -199,7 +198,7 @@ class _GPNLoginScreenState extends State<_GPNLoginScreen> {
                   ),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Consumer<StyleRepo>(
                 builder: (context, value, child) {
                   return Padding(
