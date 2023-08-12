@@ -15,8 +15,12 @@ abstract class AppColors {
   static const Color footerHeader = Colors.white;
 
   static const Color greyText = Color.fromARGB(255, 135, 153, 165);
+  static const Color stroke = Color.fromARGB(255, 228, 230, 236);
+  static const Color accent = Color.fromARGB(255, 7, 0, 255);
 }
 
 abstract class Assets {
   static const gColored = "assets/images/icon_google_color.svg";
+  static const eye = "assets/images/eye.svg";
+  static const eyeOff = "assets/images/eye-off.svg";
 }

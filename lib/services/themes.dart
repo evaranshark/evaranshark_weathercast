@@ -29,32 +29,42 @@ final class GPNTheme {
   }
 
   late ThemeData _themeData;
-  static ThemeData get theme => _instance!._themeData;
+  ThemeData get theme => _instance!._themeData;
 
   static GPNTheme? _instance;
 
   static final _defaultTextTheme = Typography.blackRedmond.copyWith(
     headlineLarge: GoogleFonts.ubuntu(
       color: Colors.black,
-      fontSize: 32,
-      height: 36 / 32,
+      fontSize: 28,
+      height: 32 / 28,
+      fontWeight: FontWeight.w500,
     ),
     headlineMedium: GoogleFonts.ubuntu(
       color: Colors.black,
       fontSize: 22,
       height: 28 / 22,
+      fontWeight: FontWeight.w500,
     ),
     bodyLarge: GoogleFonts.roboto(
+      color: Colors.black,
       fontSize: 17,
       height: 24 / 17,
     ),
     bodyMedium: GoogleFonts.roboto(
+      color: Colors.black,
       fontSize: 15,
       height: 22 / 15,
     ),
     bodySmall: GoogleFonts.roboto(
+      color: Colors.black,
       fontSize: 13,
       height: 18 / 13,
+    ),
+    titleMedium: GoogleFonts.roboto(
+      color: Colors.black,
+      fontSize: 17,
+      height: 24 / 17,
     ),
   );
 
@@ -65,8 +75,8 @@ final class GPNTheme {
         style: ButtonStyle(
           padding:
               const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.all(8.0)),
-          backgroundColor: MaterialStateColor.resolveWith(
-              (states) => const Color.fromARGB(255, 7, 0, 255)),
+          backgroundColor:
+              MaterialStateColor.resolveWith((states) => AppColors.accent),
           shape: MaterialStateProperty.resolveWith<OutlinedBorder>((states) =>
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))),
           foregroundColor:
@@ -78,6 +88,31 @@ final class GPNTheme {
           maximumSize:
               const MaterialStatePropertyAll<Size>(Size.fromHeight(60)),
         ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: AppColors.stroke,
+          ),
+        ),
+        border: const UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: AppColors.stroke,
+          ),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(
+            width: 2.0,
+            color: AppColors.accent,
+          ),
+        ),
+        labelStyle: _defaultTextTheme.bodyLarge!.copyWith(
+          color: AppColors.greyText,
+        ),
+        floatingLabelStyle: _defaultTextTheme.bodyMedium!.copyWith(
+          color: AppColors.greyText,
+        ),
+        suffixIconColor: AppColors.accent,
       ),
     );
   }
@@ -192,7 +227,7 @@ final class EvaransharkTheme {
   }
 
   late ThemeData _themeData;
-  static ThemeData get theme => _instance!._themeData;
+  ThemeData get theme => _instance!._themeData;
 
   static EvaransharkTheme? _instance;
 }

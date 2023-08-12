@@ -32,16 +32,5 @@ flutter:
   assets:
     - assets/images/background.png
     - assets/images/icon_google_color.svg
-    - assets/images/icon_vk_color.svg
-    - assets/images/icon_yandex_color.svg
-    - assets/images/icon_yandex_color.png
-    - assets/images/icon_vk_color.png
-    - assets/images/logo.svg
-    - assets/images/login.svg
-    - assets/images/cart.svg
-    - assets/images/favorite.svg
-    - assets/images/footer_logo.png
-    - assets/images/download.png
-    - assets/images/social_vk.svg
-    - assets/images/social_tg.svg
-    - assets/images/social_yt.svg
+    - assets/images/eye.svg
+    - assets/images/eye-off.svg
