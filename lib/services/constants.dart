@@ -13,21 +13,10 @@ abstract class AppColors {
   static const Color footerBg = Color.fromARGB(255, 42, 8, 61);
   static const Color cardBg = Color.fromARGB(255, 233, 238, 255);
   static const Color footerHeader = Colors.white;
+
+  static const Color greyText = Color.fromARGB(255, 135, 153, 165);
 }
 
 abstract class Assets {
-  static const vkColored = "assets/images/icon_vk_color.svg";
-  static const yColored = "assets/images/icon_yandex_color.svg";
   static const gColored = "assets/images/icon_google_color.svg";
-  static const vkColoredPng = "assets/images/icon_vk_color.png";
-  static const yColoredPng = "assets/images/icon_yandex_color.png";
-  static const logo = "assets/images/logo.svg";
-  static const login = "assets/images/login.svg";
-  static const cart = "assets/images/cart.svg";
-  static const favorite = "assets/images/favorite.svg";
-  static const footerLogo = "assets/images/footer_logo.png";
-  static const download = "assets/images/download.png";
-  static const socialVk = "assets/images/social_vk.svg";
-  static const socialTg = "assets/images/social_tg.svg";
-  static const socialYt = "assets/images/social_yt.svg";
 }

@@ -1,6 +1,7 @@
 import 'package:evaranshark_weathercast/repositories/style_repo.dart';
 import 'package:evaranshark_weathercast/screens/login/bloc/user_bloc.dart';
 import 'package:evaranshark_weathercast/screens/login/widgets/login_form.dart';
+import 'package:evaranshark_weathercast/services/constants.dart';
 import 'package:evaranshark_weathercast/services/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -107,21 +108,21 @@ class _GPNLoginScreenState extends State<_GPNLoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _GPNHeaders(),
+              const _GPNHeaders(),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(bottom: 24.0),
                 child: TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     label: Text("EMail"),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(bottom: 24.0),
                 child: TextFormField(),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(bottom: 24.0),
                 child: ElevatedButton(
                   onPressed: () {},
                   child: Text(
@@ -149,13 +150,23 @@ class _GPNHeaders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             "Вход",
             style: Theme.of(context).textTheme.headlineLarge,
+          ),
+          const SizedBox(
+            height: 12.0,
+          ),
+          Text(
+            "Введите данные для входа",
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: AppColors.greyText),
           ),
         ],
       ),
