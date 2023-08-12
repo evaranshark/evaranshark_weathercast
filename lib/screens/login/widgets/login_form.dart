@@ -59,7 +59,7 @@ class _LoginFormState extends State<LoginForm> {
         maxWidth: 500,
         minWidth: 200,
       ),
-      child: _LoginFormDecoration(
+      child: EvaBubble(
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: Form(
@@ -201,9 +201,9 @@ class _LoginFormState extends State<LoginForm> {
   }
 }
 
-class _LoginFormDecoration extends StatelessWidget {
+class EvaBubble extends StatelessWidget {
   final Widget child;
-  const _LoginFormDecoration({
+  const EvaBubble({
     super.key,
     required this.child,
   });

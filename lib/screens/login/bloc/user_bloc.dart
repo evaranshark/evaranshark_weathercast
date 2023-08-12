@@ -77,6 +77,8 @@ final class UserBloc extends Bloc<UserEvent, UserState> {
         try {
           final userCreds = await signInWithGoogle();
           emit(HasUser(user: userCreds.user!));
+        } on FirebaseAuthException catch (e) {
+          resolveAuthError(e.code, emit);
         } catch (e) {
           emit(HasError("Что-то пошло не так"));
         }
@@ -90,6 +92,31 @@ final class UserBloc extends Bloc<UserEvent, UserState> {
       },
     );
 
+    on<EmailLogin>(
+      (event, emit) async {
+        try {
+          final userCreds = await auth.signInWithEmailAndPassword(
+              email: event.email, password: event.password);
+          emit(HasUser(user: userCreds.user!));
+        } on FirebaseAuthException catch (e) {
+          resolveAuthError(e.code, emit);
+        } catch (e) {
+          emit(HasError("Что-то пошло не так"));
+        }
+      },
+    );
+
     auth.authStateChanges().listen(onUserStateChanged);
+  }
+
+  resolveAuthError(String code, Emitter<UserState> emit) {
+    switch (code) {
+      case "wrong-password" || "user-not-found":
+        emit(HasError("Неверное имя пользователя или пароль"));
+        break;
+      default:
+        emit(HasError("Что-то пошло не так"));
+        break;
+    }
   }
 }
