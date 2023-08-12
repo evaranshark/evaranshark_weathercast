@@ -1,0 +1,413 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'constants.dart';
+
+class LinkTextStyle extends ThemeExtension<LinkTextStyle> {
+  MaterialStateTextStyle textStyle;
+  LinkTextStyle({
+    required this.textStyle,
+  });
+
+  @override
+  LinkTextStyle copyWith({MaterialStateTextStyle? textStyle}) {
+    return LinkTextStyle(
+      textStyle: textStyle ?? this.textStyle,
+    );
+  }
+
+  @override
+  ThemeExtension<LinkTextStyle> lerp(
+      covariant ThemeExtension<LinkTextStyle>? other, double t) {
+    return this;
+  }
+}
+
+final class GPNTheme {
+  factory GPNTheme.initTheme() {
+    return _instance ??= GPNTheme._();
+  }
+
+  late ThemeData _themeData;
+  static ThemeData get theme => _instance!._themeData;
+
+  static GPNTheme? _instance;
+
+  static final _defaultTextTheme = Typography.blackRedmond.copyWith(
+    headlineLarge: GoogleFonts.ubuntu(
+      color: Colors.black,
+      fontSize: 32,
+      height: 36 / 32,
+    ),
+    headlineMedium: GoogleFonts.ubuntu(
+      color: Colors.black,
+      fontSize: 22,
+      height: 28 / 22,
+    ),
+    bodyLarge: GoogleFonts.roboto(
+      fontSize: 17,
+      height: 24 / 17,
+    ),
+    bodyMedium: GoogleFonts.roboto(
+      fontSize: 15,
+      height: 22 / 15,
+    ),
+    bodySmall: GoogleFonts.roboto(
+      fontSize: 13,
+      height: 18 / 13,
+    ),
+  );
+
+  GPNTheme._() {
+    _themeData = ThemeData.light().copyWith(
+      textTheme: _defaultTextTheme,
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          padding:
+              const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.all(8.0)),
+          backgroundColor: MaterialStateColor.resolveWith(
+              (states) => const Color.fromARGB(255, 7, 0, 255)),
+          shape: MaterialStateProperty.resolveWith<OutlinedBorder>((states) =>
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))),
+          foregroundColor:
+              MaterialStateColor.resolveWith((states) => Colors.white),
+          textStyle: MaterialStateTextStyle.resolveWith(
+              (states) => _defaultTextTheme.bodyLarge!),
+          alignment: Alignment.center,
+          minimumSize: const MaterialStatePropertyAll<Size>(Size(48, 48)),
+          maximumSize:
+              const MaterialStatePropertyAll<Size>(Size.fromHeight(60)),
+        ),
+      ),
+    );
+  }
+}
+
+final class EvaransharkTheme {
+  EvaransharkTheme._() {
+    _themeData = EvaTheming.themeBase.copyWith(
+      elevatedButtonTheme: EvaTheming.elevatedButtonTheme,
+      textSelectionTheme: const TextSelectionThemeData(
+        cursorColor: AppColors.textP,
+      ),
+      textTheme: EvaTheming.defaultTextTheme,
+      dividerColor: AppColors.textLight,
+      inputDecorationTheme: InputDecorationTheme(
+          border: MaterialStateOutlineInputBorder.resolveWith((states) {
+        var activeStates = [
+          MaterialState.hovered,
+          MaterialState.focused,
+          MaterialState.selected,
+          MaterialState.pressed
+        ];
+        InputBorder getBorder(Color color) {
+          return OutlineInputBorder(
+            borderSide: BorderSide(
+              color: color,
+              width: 2.0,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          );
+        }
+
+        if (states.contains(MaterialState.focused)) {
+          return getBorder(AppColors.violetHard);
+        }
+        if (states.contains(MaterialState.error)) {
+          return getBorder(AppColors.errorColor);
+        }
+        if (activeStates.any(states.contains)) {
+          return getBorder(AppColors.violetHard);
+        }
+
+        return getBorder(AppColors.violetLight);
+      }), labelStyle: MaterialStateTextStyle.resolveWith((states) {
+        if (states.contains(MaterialState.hovered)) {
+          return GoogleFonts.rubik(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 1.03,
+            color: AppColors.textP,
+          );
+        }
+        return GoogleFonts.rubik(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          letterSpacing: 1.03,
+          color: AppColors.violetLight,
+        );
+      }), floatingLabelStyle: MaterialStateTextStyle.resolveWith((states) {
+        if (states.contains(MaterialState.focused)) {
+          return EvaTheming.defaultTextTheme.labelSmall!.copyWith(
+            color: AppColors.violetLight,
+          );
+        }
+        if (states.contains(MaterialState.error)) {
+          return EvaTheming.defaultTextTheme.labelSmall!.copyWith(
+            color: AppColors.textLight,
+          );
+        }
+        if (states.contains(MaterialState.hovered)) {
+          return EvaTheming.defaultTextTheme.labelSmall!.copyWith(
+            color: AppColors.violetLight,
+          );
+        }
+        return EvaTheming.defaultTextTheme.labelSmall!.copyWith(
+          color: AppColors.violetLight,
+        );
+      }), suffixIconColor: MaterialStateColor.resolveWith((states) {
+        var activeStates = [
+          MaterialState.hovered,
+          MaterialState.focused,
+        ];
+        if (activeStates.any(states.contains)) {
+          return AppColors.violetHard;
+        }
+        return AppColors.violetLight;
+      })),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: MaterialStateColor.resolveWith((states) {
+            if (states.contains(MaterialState.disabled)) {
+              return AppColors.textP;
+            }
+            if (states.contains(MaterialState.hovered) ||
+                states.contains(MaterialState.focused)) {
+              return AppColors.linkHover;
+            }
+            return AppColors.link;
+          }),
+        ),
+      ),
+      extensions: [
+        EvaTheming.defaultLinkStyle,
+        EvaTheming.defaultMainButtonStyle,
+        EvaTheming.defaultOmegaIconButtonTheme,
+      ],
+    );
+  }
+
+  factory EvaransharkTheme.initTheme() {
+    return _instance ??= EvaransharkTheme._();
+  }
+
+  late ThemeData _themeData;
+  static ThemeData get theme => _instance!._themeData;
+
+  static EvaransharkTheme? _instance;
+}
+
+abstract class EvaTheming {
+  static final themeBase = ThemeData.light(useMaterial3: true).copyWith(
+    colorScheme: const ColorScheme.light(
+      primary: Color.fromARGB(255, 170, 158, 255),
+    ),
+    textTheme: defaultTextTheme,
+  );
+
+  static final defaultTextTheme =
+      ThemeData.light(useMaterial3: true).textTheme.copyWith(
+            labelSmall: GoogleFonts.rubik(
+              fontSize: 18,
+              fontWeight: FontWeight.w300,
+              letterSpacing: 0.5,
+            ),
+            titleMedium: GoogleFonts.rubik(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              letterSpacing: 0.5,
+            ),
+            displayMedium: GoogleFonts.rubik(
+              fontWeight: FontWeight.w700,
+            ),
+            bodyMedium: GoogleFonts.rubik(
+              fontWeight: FontWeight.w400,
+              fontSize: 16,
+              color: AppColors.textP,
+            ),
+          );
+
+  static ElevatedButtonThemeData footerElevatedButtonTheme =
+      ElevatedButtonThemeData(
+    style: ButtonStyle(
+      backgroundColor: MaterialStateColor.resolveWith((states) {
+        return Colors.white;
+      }),
+      foregroundColor: MaterialStateColor.resolveWith((states) {
+        return AppColors.textH;
+      }),
+      shadowColor: const MaterialStatePropertyAll<Color>(Colors.transparent),
+      textStyle: MaterialStatePropertyAll(GoogleFonts.rubik(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0.48,
+      )),
+      padding: const MaterialStatePropertyAll(
+        EdgeInsets.symmetric(
+          vertical: 13,
+          horizontal: 9,
+        ),
+      ),
+      minimumSize: const MaterialStatePropertyAll<Size>(Size(42, 42)),
+      shape: MaterialStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+      visualDensity: VisualDensity.standard,
+    ),
+  );
+
+  static ElevatedButtonThemeData elevatedButtonTheme = ElevatedButtonThemeData(
+    style: ButtonStyle(
+      backgroundColor: MaterialStateColor.resolveWith((states) {
+        if (states.contains(MaterialState.disabled)) {
+          return const Color.fromARGB(255, 240, 238, 255);
+        }
+        if (states.contains(MaterialState.hovered)) {
+          return const Color.fromARGB(255, 134, 27, 192);
+        }
+        if (states.contains(MaterialState.pressed)) {
+          return const Color.fromARGB(255, 160, 74, 207);
+        }
+        return const Color.fromARGB(255, 160, 74, 207);
+      }),
+      foregroundColor: MaterialStateColor.resolveWith((states) {
+        return states.contains(MaterialState.disabled)
+            ? AppColors.violetHard
+            : Colors.white;
+      }),
+      shadowColor: const MaterialStatePropertyAll<Color>(Colors.transparent),
+      textStyle: MaterialStatePropertyAll(GoogleFonts.rubik(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 1.03,
+      )),
+      padding: const MaterialStatePropertyAll(
+        EdgeInsets.symmetric(
+          vertical: 13,
+          horizontal: 35,
+        ),
+      ),
+      minimumSize: const MaterialStatePropertyAll<Size>(Size(50, 50)),
+      shape: MaterialStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+      visualDensity: VisualDensity.standard,
+    ),
+  );
+
+  static LinkTextStyle defaultLinkStyle = LinkTextStyle(
+    textStyle: MaterialStateTextStyle.resolveWith((states) {
+      return GoogleFonts.rubik(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 1.03,
+        color: MaterialStateColor.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return AppColors.textP;
+          }
+          if (states.contains(MaterialState.hovered) ||
+              states.contains(MaterialState.focused)) {
+            return AppColors.linkHover;
+          }
+          return AppColors.link;
+        }).resolve(states),
+      );
+    }),
+  );
+
+  static LinkTextStyle defaultHeaderLinkStyle = LinkTextStyle(
+    textStyle: MaterialStateTextStyle.resolveWith((states) {
+      return GoogleFonts.rubik(
+        fontSize: 13,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 1.02,
+        color: MaterialStateColor.resolveWith((states) {
+          if (states.contains(MaterialState.disabled)) {
+            return AppColors.textP;
+          }
+          if (states.contains(MaterialState.hovered) ||
+              states.contains(MaterialState.focused)) {
+            return AppColors.linkHover;
+          }
+          return AppColors.link;
+        }).resolve(states),
+      );
+    }),
+  );
+
+  static PageBarItemStyle defaultMainButtonStyle =
+      PageBarItemStyle(textStyle: MaterialStateTextStyle.resolveWith((states) {
+    return GoogleFonts.rubik(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+      color: (states.contains(MaterialState.hovered))
+          ? AppColors.mainButton
+          : AppColors.textH,
+    );
+  }), border: MaterialStateProperty.resolveWith((states) {
+    if (states.contains(MaterialState.selected)) {
+      return const Border(
+        bottom: BorderSide(
+          color: AppColors.mainButton,
+          width: 2.0,
+        ),
+      );
+    }
+    return const Border.fromBorderSide(BorderSide.none);
+  }));
+
+  static OmegaIconButtonTheme defaultOmegaIconButtonTheme =
+      OmegaIconButtonTheme(
+    labelStyle: MaterialStateTextStyle.resolveWith((states) {
+      return GoogleFonts.rubik(
+        fontWeight: FontWeight.w500,
+        fontSize: 12.0,
+        color: AppColors.textH,
+      );
+    }),
+  );
+}
+
+class PageBarItemStyle extends ThemeExtension<PageBarItemStyle> {
+  final MaterialStateTextStyle textStyle;
+  final MaterialStateProperty<Border> border;
+
+  PageBarItemStyle({
+    required this.textStyle,
+    required this.border,
+  });
+
+  @override
+  ThemeExtension<PageBarItemStyle> copyWith({
+    MaterialStateTextStyle? textStyle,
+    MaterialStateProperty<Border>? border,
+  }) {
+    return PageBarItemStyle(
+      textStyle: textStyle ?? this.textStyle,
+      border: border ?? this.border,
+    );
+  }
+
+  @override
+  ThemeExtension<PageBarItemStyle> lerp(
+      covariant ThemeExtension<PageBarItemStyle>? other, double t) {
+    return this;
+  }
+}
+
+class OmegaIconButtonTheme extends ThemeExtension<OmegaIconButtonTheme> {
+  final MaterialStateTextStyle labelStyle;
+
+  OmegaIconButtonTheme({
+    required this.labelStyle,
+  });
+
+  @override
+  ThemeExtension<OmegaIconButtonTheme> copyWith() {
+    return this;
+  }
+
+  @override
+  ThemeExtension<OmegaIconButtonTheme> lerp(
+      covariant ThemeExtension<OmegaIconButtonTheme>? other, double t) {
+    return this;
+  }
+}
