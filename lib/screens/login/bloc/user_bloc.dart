@@ -18,6 +18,8 @@ class HasError extends UserState {
   HasError(this.error);
 }
 
+class Loading extends UserState {}
+
 sealed class UserEvent {}
 
 class EmailLogin extends UserEvent {
@@ -73,6 +75,7 @@ final class UserBloc extends Bloc<UserEvent, UserState> {
 
     on<GoogleLogin>(
       (event, emit) async {
+        emit(Loading());
         try {
           final userCreds = await signInWithGoogle();
           emit(HasUser(user: userCreds.user!));
@@ -86,6 +89,7 @@ final class UserBloc extends Bloc<UserEvent, UserState> {
 
     on<Logout>(
       (event, emit) async {
+        emit(Loading());
         await auth.signOut();
         emit(NoUser());
       },
@@ -93,11 +97,13 @@ final class UserBloc extends Bloc<UserEvent, UserState> {
 
     on<EmailLogin>(
       (event, emit) async {
+        emit(Loading());
         try {
           final userCreds = await auth.signInWithEmailAndPassword(
               email: event.email, password: event.password);
           emit(HasUser(user: userCreds.user!));
         } on FirebaseAuthException catch (e) {
+          await Future.delayed(Duration(seconds: 1));
           resolveAuthError(e.code, emit);
         } catch (e) {
           emit(HasError("Что-то пошло не так"));
@@ -113,6 +119,8 @@ final class UserBloc extends Bloc<UserEvent, UserState> {
       case "wrong-password" || "user-not-found":
         emit(HasError("Неверное имя пользователя или пароль"));
         break;
+      case "too-many-requests":
+        emit(HasError("Слишком много попыток. Попробуйте позже"));
       default:
         emit(HasError("Что-то пошло не так"));
         break;
