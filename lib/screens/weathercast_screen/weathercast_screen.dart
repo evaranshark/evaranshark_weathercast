@@ -1,20 +1,14 @@
-import 'package:evaranshark_weathercast/models/weather.dart';
 import 'package:evaranshark_weathercast/repositories/style_repo.dart';
 import 'package:evaranshark_weathercast/screens/weathercast_screen/bloc/forecast_bloc.dart';
 import 'package:evaranshark_weathercast/screens/weathercast_screen/parts/header.dart';
 import 'package:evaranshark_weathercast/services/constants.dart';
-import 'package:evaranshark_weathercast/widgets/change_theme_widget.dart';
-import 'package:evaranshark_weathercast/widgets/gpn_bubble.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hive/hive.dart';
+
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 import 'package:system_settings/system_settings.dart';
 
-import '../../services/helpers.dart';
 import '../login/bloc/user_bloc.dart';
 import 'bloc/forecast_event.dart';
 import 'bloc/forecast_state.dart';
