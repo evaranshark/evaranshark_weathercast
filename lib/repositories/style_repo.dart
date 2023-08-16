@@ -6,8 +6,7 @@ final class StyleRepo with ChangeNotifier {
   final EvaransharkTheme _evaransharkTheme = EvaransharkTheme.initTheme();
   final GPNTheme _gpnTheme = GPNTheme.initTheme();
 
-  ThemeData get theme =>
-      useGPNTheme ? _gpnTheme.theme : _evaransharkTheme.theme;
+  ThemeProvider get theme => useGPNTheme ? _gpnTheme : _evaransharkTheme;
   StyleRepo._() : useGPNTheme = true;
 
   static StyleRepo? _instance;

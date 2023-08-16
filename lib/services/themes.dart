@@ -23,66 +23,119 @@ class LinkTextStyle extends ThemeExtension<LinkTextStyle> {
   }
 }
 
-final class GPNTheme {
+abstract base class ThemeProvider {
+  ThemeData get light;
+  ThemeData get dark;
+  ColorScheme get colorSchemeLight;
+  ColorScheme get colorSchemeDark;
+}
+
+final class GPNTheme implements ThemeProvider {
   factory GPNTheme.initTheme() {
     return _instance ??= GPNTheme._();
   }
 
-  late ThemeData _themeData;
-  ThemeData get theme => _instance!._themeData;
+  late ThemeData _themeDataLight, _themeDataDark;
+
+  @override
+  ThemeData get light => _instance!._themeDataLight;
+
+  @override
+  ThemeData get dark => _instance!._themeDataDark;
+
+  @override
+  ColorScheme get colorSchemeLight => const ColorScheme.light(
+        onSurface: Colors.black, // Snackbar background,
+        onError: Colors.red,
+        surface: Colors.white,
+        onInverseSurface: Colors.white,
+        inverseSurface: Colors.black,
+        error: Colors.red,
+        primary: AppColors.accent,
+        outlineVariant: Colors.black,
+      );
+
+  @override
+  ColorScheme get colorSchemeDark => ColorScheme.light(
+        onSurface: Colors.white, // Snackbar background,
+        onError: Colors.red,
+        surface: Colors.white,
+        onInverseSurface: Colors.white,
+        inverseSurface: Colors.grey.shade800,
+        error: Colors.red,
+        primary: AppColors.accent,
+        outlineVariant: Colors.white,
+      );
 
   static GPNTheme? _instance;
 
-  static final _defaultTextTheme = Typography.blackRedmond.copyWith(
-    headlineLarge: GoogleFonts.ubuntu(
-      color: Colors.black,
-      fontSize: 28,
-      height: 32 / 28,
-      fontWeight: FontWeight.w500,
-    ),
-    headlineMedium: GoogleFonts.ubuntu(
-      color: Colors.black,
-      fontSize: 22,
-      height: 28 / 22,
-      fontWeight: FontWeight.w500,
-    ),
-    bodyLarge: GoogleFonts.roboto(
-      color: Colors.black,
-      fontSize: 17,
-      height: 24 / 17,
-    ),
-    bodyMedium: GoogleFonts.roboto(
-      color: Colors.black,
-      fontSize: 15,
-      height: 22 / 15,
-    ),
-    bodySmall: GoogleFonts.roboto(
-      color: Colors.black,
-      fontSize: 13,
-      height: 18 / 13,
-    ),
-    titleMedium: GoogleFonts.roboto(
-      color: Colors.black,
-      fontSize: 17,
-      height: 24 / 17,
-    ),
-  );
+  TextTheme _defaultTextTheme(ColorScheme scheme) => Typography.material2021(
+        colorScheme: scheme,
+        black: Typography.blackMountainView.copyWith(
+          headlineLarge: GoogleFonts.ubuntu(
+            //color: Colors.black,
+            fontSize: 28,
+            height: 32 / 28,
+            fontWeight: FontWeight.w500,
+          ),
+          headlineMedium: GoogleFonts.ubuntu(
+            //color: Colors.black,
+            fontSize: 22,
+            height: 28 / 22,
+            fontWeight: FontWeight.w500,
+          ),
+          bodyLarge: GoogleFonts.roboto(
+            //color: Colors.black,
+            fontSize: 17,
+            height: 24 / 17,
+          ),
+          bodyMedium: GoogleFonts.roboto(
+            //color: Colors.black,
+            fontSize: 15,
+            height: 22 / 15,
+          ),
+          bodySmall: GoogleFonts.roboto(
+            //color: Colors.black,
+            fontSize: 13,
+            height: 18 / 13,
+          ),
+          titleMedium: GoogleFonts.roboto(
+            //color: Colors.black,
+            fontSize: 17,
+            height: 24 / 17,
+          ),
+          labelLarge: GoogleFonts.roboto(
+            //color: Colors.black,
+            fontSize: 17,
+            height: 24 / 17,
+          ),
+          displayLarge: GoogleFonts.ubuntu(
+            fontSize: 64,
+            height: 72 / 64,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ).black;
 
   GPNTheme._() {
-    _themeData = ThemeData.light().copyWith(
-      textTheme: _defaultTextTheme,
+    _themeDataLight = _getTheme(colorSchemeLight);
+    _themeDataDark = _getTheme(colorSchemeDark);
+  }
+
+  _getTheme(ColorScheme scheme) {
+    return ThemeData(
+      colorScheme: scheme,
+      textTheme: _defaultTextTheme(scheme),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
           padding:
               const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.all(8.0)),
-          backgroundColor:
-              MaterialStateColor.resolveWith((states) => AppColors.accent),
           shape: MaterialStateProperty.resolveWith<OutlinedBorder>((states) =>
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))),
           foregroundColor:
               MaterialStateColor.resolveWith((states) => Colors.white),
           textStyle: MaterialStateTextStyle.resolveWith(
-              (states) => _defaultTextTheme.bodyLarge!),
+              (states) => _defaultTextTheme(scheme).bodyLarge!),
           alignment: Alignment.center,
           minimumSize: const MaterialStatePropertyAll<Size>(Size(48, 48)),
           maximumSize:
@@ -106,19 +159,42 @@ final class GPNTheme {
             color: AppColors.accent,
           ),
         ),
-        labelStyle: _defaultTextTheme.bodyLarge!.copyWith(
-          color: AppColors.greyText,
-        ),
-        floatingLabelStyle: _defaultTextTheme.bodyMedium!.copyWith(
-          color: AppColors.greyText,
-        ),
+        labelStyle: _defaultTextTheme(scheme).bodyLarge!.copyWith(
+              color: AppColors.greyText,
+            ),
+        floatingLabelStyle: _defaultTextTheme(scheme).bodyMedium!.copyWith(
+              color: AppColors.greyText,
+            ),
         suffixIconColor: AppColors.accent,
+      ),
+      // switchTheme: SwitchThemeData(
+      //   thumbColor:
+      //       MaterialStateColor.resolveWith((states) => AppColors.accent),
+      //   trackColor: MaterialStateColor.resolveWith(
+      //       (states) => AppColors.accent.withAlpha(100)),
+      // ),
+      iconTheme: IconThemeData(
+        color: scheme.onSurface,
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: scheme.inverseSurface,
+        textStyle: _defaultTextTheme(scheme).labelLarge!.copyWith(
+              color: scheme.onInverseSurface,
+            ),
+      ),
+      dividerColor: scheme.outlineVariant,
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: scheme.inverseSurface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        contentTextStyle: _defaultTextTheme(scheme).bodyMedium!.copyWith(
+              color: scheme.onInverseSurface,
+            ),
       ),
     );
   }
 }
 
-final class EvaransharkTheme {
+final class EvaransharkTheme implements ThemeProvider {
   EvaransharkTheme._() {
     _themeData = EvaTheming.themeBase.copyWith(
       elevatedButtonTheme: EvaTheming.elevatedButtonTheme,
@@ -227,9 +303,20 @@ final class EvaransharkTheme {
   }
 
   late ThemeData _themeData;
-  ThemeData get theme => _instance!._themeData;
+
+  @override
+  ThemeData get light => _instance!._themeData;
 
   static EvaransharkTheme? _instance;
+
+  @override
+  ColorScheme get colorSchemeDark => throw UnimplementedError();
+
+  @override
+  ColorScheme get colorSchemeLight => throw UnimplementedError();
+
+  @override
+  ThemeData get dark => _instance!._themeData;
 }
 
 abstract class EvaTheming {
