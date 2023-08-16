@@ -46,3 +46,5 @@ app.*.map.json
 /ios/
 /macos/
 *.keystore
+
+**/app_config.dart
