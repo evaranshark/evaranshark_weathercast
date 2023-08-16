@@ -41,19 +41,17 @@ class EvaFormField extends StatefulWidget {
 }
 
 class _EvaFormFieldState extends State<EvaFormField>
-    with MaterialStateMixin<EvaFormField>, ChangeNotifier {
+    with MaterialStateMixin<EvaFormField> {
   bool fieldValid = true;
-  late TextEditingController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = widget.controller ?? TextEditingController();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    //dispose();
     super.dispose();
   }
 
@@ -82,7 +80,7 @@ class _EvaFormFieldState extends State<EvaFormField>
                 )
               : null,
         ),
-        controller: controller,
+        controller: widget.controller,
         validator: (value) {
           var result = widget.validator?.call(value);
           setMaterialState(MaterialState.error, result != null);
