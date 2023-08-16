@@ -23,4 +23,20 @@ abstract class Assets {
   static const gColored = "assets/images/icon_google_color.svg";
   static const eye = "assets/images/eye.svg";
   static const eyeOff = "assets/images/eye-off.svg";
+  static const rain = "assets/images/rain_big.png";
+  static const slightRain = "assets/images/slight_rain_big.png";
+  static const snow = "assets/images/snow_big.png";
+  static const sun = "assets/images/sun_big.png";
+  static const sunnyRain = "assets/images/sunny_rain_big.png";
+  static const thunder = "assets/images/thunder_big.png";
+
+  static const thunderSm = "assets/images/thunder_sm.png";
+  static const sunSm = "assets/images/Sun_sm.png";
+  static const cmoonSm = "assets/images/CloudMoon_sm.png";
+  static const crainSm = "assets/images/CloudRain_sm.png";
+  static const csnowSm = "assets/images/CloudSnow_sm.png";
+  static const csunSm = "assets/images/CloudSun_sm.png";
+
+  static const wind = "assets/images/Wind.svg";
+  static const drop = "assets/images/Drop.svg";
 }
