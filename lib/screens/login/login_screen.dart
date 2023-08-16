@@ -2,7 +2,10 @@ import 'package:email_validator/email_validator.dart';
 import 'package:evaranshark_weathercast/repositories/style_repo.dart';
 import 'package:evaranshark_weathercast/screens/login/bloc/user_bloc.dart';
 import 'package:evaranshark_weathercast/screens/login/widgets/login_form.dart';
+import 'package:evaranshark_weathercast/screens/weathercast_screen/bloc/forecast_bloc.dart';
+import 'package:evaranshark_weathercast/screens/weathercast_screen/bloc/forecast_event.dart';
 import 'package:evaranshark_weathercast/services/constants.dart';
+import 'package:evaranshark_weathercast/widgets/change_theme_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,49 +19,47 @@ class LoginScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Consumer<StyleRepo>(
       builder: (context, value, child) =>
-          Theme(data: value.theme, child: child!),
-      child: BlocProvider<UserBloc>(
-        create: (context) => UserBloc(),
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: BlocListener<UserBloc, UserState>(
-            listener: (context, state) {
-              if (state is HasError) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(state.error.toString()),
-                  behavior: SnackBarBehavior.floating,
-                ));
-              }
-              if (state is HasUser) {
-                Navigator.of(context).pushNamed('/weathercast');
-              }
+          Theme(data: value.theme.light, child: child!),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: BlocListener<UserBloc, UserState>(
+          listener: (context, state) {
+            if (state is HasError) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(state.error.toString()),
+                behavior: SnackBarBehavior.floating,
+              ));
+            }
+            if (state is HasUser) {
+              Navigator.of(context).pushReplacementNamed('/weathercast');
+              context.read<ForecastBloc>().add(FetchWeather());
+            }
+          },
+          child: Consumer<StyleRepo>(
+            builder: (context, value, child) {
+              return value.useGPNTheme ? const _GPNLoginScreen() : child!;
             },
-            child: Consumer<StyleRepo>(
-              builder: (context, value, child) {
-                return value.useGPNTheme ? const _GPNLoginScreen() : child!;
-              },
-              child: Stack(
-                children: [
-                  SizedBox(
-                    width: size.width,
-                    height: size.height,
-                    child: const DecoratedBox(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("assets/images/background.png"),
-                          fit: BoxFit.cover,
-                        ),
+            child: Stack(
+              children: [
+                SizedBox(
+                  width: size.width,
+                  height: size.height,
+                  child: const DecoratedBox(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/images/background.png"),
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  const SafeArea(
-                    child: Scaffold(
-                      backgroundColor: Colors.transparent,
-                      body: _LoginForm(),
-                    ),
+                ),
+                const SafeArea(
+                  child: Scaffold(
+                    backgroundColor: Colors.transparent,
+                    body: _LoginForm(),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -74,42 +75,24 @@ class _LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
+    return const Align(
       alignment: Alignment.center,
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Column(
             children: [
-              LoginForm(
-                onLogin: () => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("login actions")),
-                ),
-              ),
-              const SizedBox(
+              LoginForm(),
+              SizedBox(
                 height: 10,
               ),
               EvaBubble(
-                child: Consumer<StyleRepo>(
-                  builder: (context, value, child) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 30,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Сменить тему"),
-                          Switch.adaptive(
-                            value: value.useGPNTheme,
-                            onChanged: (switchValue) =>
-                                value.changeTheme(switchValue),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 24.0,
+                  ),
+                  child: ChangeThemeWidget(),
                 ),
               ),
             ],
@@ -144,83 +127,72 @@ class _GPNLoginScreenState extends State<_GPNLoginScreen> {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 48.0, horizontal: 24.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const _GPNHeaders(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 24.0),
-                child: TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Введите Email";
-                    }
-                    if (!EmailValidator.validate(value)) {
-                      return "Некорректный Email";
-                    }
-                  },
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                    label: Text("EMail"),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 24.0),
-                child: PasswordField(
-                  controller: passwordControler,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Введите пароль";
-                    }
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 24.0, top: 24.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    if (_formKey.currentState!.validate()) {
-                      context.read<UserBloc>().add(EmailLogin(
-                          email: emailController.text,
-                          password: passwordControler.text));
-                    }
-                  },
-                  child: Text(
-                    "Войти",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(color: Colors.white),
-                  ),
-                ),
-              ),
-              const Spacer(),
-              Consumer<StyleRepo>(
-                builder: (context, value, child) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Сменить тему",
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        Switch.adaptive(
-                          value: value.useGPNTheme,
-                          onChanged: (switchValue) =>
-                              value.changeTheme(switchValue),
-                        ),
-                      ],
+        child: BlocBuilder<UserBloc, UserState>(
+          builder: (context, userState) => Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const _GPNHeaders(),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24.0),
+                  child: TextFormField(
+                    enabled: (userState is! Loading),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Введите Email";
+                      }
+                      if (!EmailValidator.validate(value)) {
+                        return "Некорректный Email";
+                      }
+                      return null;
+                    },
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                      label: Text("EMail"),
                     ),
-                  );
-                },
-              ),
-            ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24.0),
+                  child: PasswordField(
+                    enabled: (userState is! Loading),
+                    controller: passwordControler,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Введите пароль";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24.0, top: 24.0),
+                  child: FilledButton(
+                    onPressed: (userState is Loading)
+                        ? null
+                        : () {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            if (_formKey.currentState!.validate()) {
+                              context.read<UserBloc>().add(EmailLogin(
+                                  email: emailController.text,
+                                  password: passwordControler.text));
+                            }
+                          },
+                    child: Text(
+                      "Войти",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(color: Colors.white),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                ChangeThemeWidget(),
+              ],
+            ),
           ),
         ),
       ),
@@ -229,12 +201,14 @@ class _GPNLoginScreenState extends State<_GPNLoginScreen> {
 }
 
 class PasswordField extends StatefulWidget {
+  final bool enabled;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   const PasswordField({
     super.key,
     this.controller,
     this.validator,
+    this.enabled = true,
   });
 
   @override
@@ -247,6 +221,7 @@ class _PasswordFieldState extends State<PasswordField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: widget.enabled,
       validator: widget.validator,
       controller: widget.controller,
       obscureText: hidePassword,

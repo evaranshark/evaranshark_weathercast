@@ -27,18 +27,14 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  void onPressed() async {
+  void onPressed() {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (_formKey.currentState!.validate()) {
-      bool logged = false;
-      if (logged) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Login success")));
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Login failed")));
-      }
+      context.read<UserBloc>().add(EmailLogin(
+          email: emailController.text, password: passwordController.text));
       widget.onLogin?.call();
     }
+    ;
   }
 
   final _formKey = GlobalKey<FormState>();
